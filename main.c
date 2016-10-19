@@ -31,30 +31,11 @@ on_about (GtkMenuItem *menu_item, gpointer user_data)
 }
 
 void
-on_quit (GtkMenuItem *menu_item, gpointer user_data)
-{
-  /* Prevent quit with dialogs open */
-  if (!gtk_grab_get_current ())
-    {
-      /* Quit the program */
-      gtk_main_quit ();
-    }
-  else
-    {
-      /* A window is already open, so we present it to the user */
-      GtkWidget *toplevel = gtk_widget_get_toplevel (gtk_grab_get_current ());
-      gtk_window_present (GTK_WINDOW (toplevel));
-    }
-}
-
-int
-main (int argc, char *argv[])
+activate (GtkApplication *app, gpointer data)
 {
   AppIndicator *indicator;
   GtkWidget *indicator_menu;
   GtkWidget *menu_item;
-
-  gtk_init (NULL, NULL);
 
   indicator_menu = gtk_menu_new ();
 
@@ -70,20 +51,33 @@ main (int argc, char *argv[])
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), menu_item);
   /* Quit */
   menu_item = gtk_menu_item_new_with_mnemonic ("Quit");
-  g_signal_connect (menu_item, "activate", G_CALLBACK (on_quit), NULL);
+  g_signal_connect_swapped (menu_item, "activate", G_CALLBACK (g_application_quit), app);
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), menu_item);
-
-  /* Popup the menu... */
-  gtk_widget_show_all (indicator_menu);
 
   indicator = app_indicator_new ("shadowsocks-gtk3",
                                  "starred",
                                  APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
   app_indicator_set_status (indicator, APP_INDICATOR_STATUS_ACTIVE);
   app_indicator_set_menu (indicator, GTK_MENU (indicator_menu));
+  /* Popup the menu... */
+  gtk_widget_show_all (indicator_menu);
+  /* Hold */
+  g_application_hold (G_APPLICATION (app));
+}
 
-  gtk_main ();
-  return 0;
+int
+main (int argc, char *argv[])
+{
+  GtkApplication *app;
+  int status;
+
+  app = gtk_application_new ("com.github.xuchunyang.shadowsocks-gtk3",
+                             G_APPLICATION_FLAGS_NONE);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
 }
 
 /* Local Variables: */

@@ -57,6 +57,13 @@ main (int argc, char *argv[])
   gtk_init (NULL, NULL);
 
   indicator_menu = gtk_menu_new ();
+
+  /* Auto Proxy Mode */
+  menu_item = gtk_check_menu_item_new_with_label ("Auto Proxy Mode");
+  gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), menu_item);
+  /* Global Mode */
+  menu_item = gtk_check_menu_item_new_with_label ("Global Mode");
+  gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), menu_item);
   /* About */
   menu_item = gtk_menu_item_new_with_mnemonic ("About");
   g_signal_connect (menu_item, "activate", G_CALLBACK (on_about), NULL);

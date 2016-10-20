@@ -1,7 +1,7 @@
 #include <gtk/gtk.h>
 #include <libappindicator/app-indicator.h>
 
-const gchar *version = "0.0";
+const gchar *version = "0.1";
 const gchar *authors[] = {"Chunyang Xu <chunyang@xuchunyang.me>",
                           NULL};
 

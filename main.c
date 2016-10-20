@@ -74,23 +74,48 @@ activate (GtkApplication *app, gpointer data)
   GtkWidget *indicator_menu;
   GtkWidget *item;
   GSList *group = NULL;
+  /* Hmm, I'm really really really new to C */
+  gboolean none_proxy = FALSE;
+  gboolean auto_proxy = FALSE;
+  gboolean global_proxy = FALSE;
+  GSettings *setting;
+  gchar *mode;
 
   window = gtk_application_window_new (app);
   indicator_menu = gtk_menu_new ();
 
+  setting = g_settings_new ("org.gnome.system.proxy");
+  mode = g_settings_get_string (setting, "mode");
+
+  if (0 == g_strcmp0 ("manual", mode))
+    global_proxy = TRUE;
+  else if (0 == g_strcmp0 ("none", mode))
+    none_proxy = TRUE;
+  else if (0 == g_strcmp0 ("auto", mode))
+    auto_proxy = TRUE;
+
+  g_clear_object (&setting);
+  g_free (mode);
+
   /* None Proxy Mode */
   item = gtk_radio_menu_item_new_with_label (group, "None Proxy");
   group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (item));
+  if (none_proxy)
+    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), TRUE);
   g_signal_connect (item, "toggled", G_CALLBACK (on_none_proxy), NULL);
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
   /* Auto Proxy Mode */
   item = gtk_radio_menu_item_new_with_label (group, "Auto Proxy");
   group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (item));
+  if (auto_proxy)
+    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), TRUE);
   g_signal_connect (item, "toggled", G_CALLBACK (on_auto_proxy), NULL);
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
   /* Global Proxy Mode */
   item = gtk_radio_menu_item_new_with_label (group, "Global Proxy");
   group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (item));
+  if (global_proxy)
+    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), TRUE);
   g_signal_connect (item, "toggled", G_CALLBACK (on_global_proxy), NULL);
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
   /* Separator */

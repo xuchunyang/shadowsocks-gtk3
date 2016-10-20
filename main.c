@@ -24,6 +24,13 @@ on_none_proxy (GtkMenuItem *item, gpointer data)
   if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (item)))
     {
       g_message ("switching to none proxy mode...");
+      GError *error = NULL;
+      if (!g_spawn_command_line_async ("gsettings set org.gnome.system.proxy mode 'none'",
+                                       &error))
+        {
+          fprintf (stderr, "run gsettings failed: %s\n", error->message);
+          g_error_free (error);
+        }
     }
 }
 
@@ -33,6 +40,13 @@ on_auto_proxy (GtkMenuItem *item, gpointer data)
   if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (item)))
     {
       g_message ("switching to auto proxy mode...");
+      GError *error = NULL;
+      if (!g_spawn_command_line_async ("gsettings set org.gnome.system.proxy mode 'auto'",
+                                       &error))
+        {
+          fprintf (stderr, "run gsettings failed: %s\n", error->message);
+          g_error_free (error);
+        }
     }
 }
 
@@ -41,7 +55,14 @@ on_global_proxy (GtkMenuItem *item, gpointer data)
 {
   if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (item)))
     {
-      g_message ("switching to global proxy mode");
+      g_message ("switching to global proxy mode...");
+      GError *error = NULL;
+      if (!g_spawn_command_line_async ("gsettings set org.gnome.system.proxy mode 'manual'",
+                                       &error))
+        {
+          fprintf (stderr, "run gsettings failed: %s\n", error->message);
+          g_error_free (error);
+        }
     }
 }
 

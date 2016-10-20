@@ -131,7 +131,7 @@ activate (GtkApplication *app, gpointer data)
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
 
   indicator = app_indicator_new ("shadowsocks-gtk3",
-                                 "sent-mail",
+                                 "shadowsocks-gtk3-menu-icon",
                                  APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
   app_indicator_set_status (indicator, APP_INDICATOR_STATUS_ACTIVE);
   app_indicator_set_menu (indicator, GTK_MENU (indicator_menu));

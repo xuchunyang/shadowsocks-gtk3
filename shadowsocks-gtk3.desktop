@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Shadowsocks-Gtk3
+Comment=Shadowsocks tray program
+Comment[zh_CN]=shadowsocks 托盘程序
+Exec=shadowsocks-gtk3
+Icon=shadowsocks-gtk3
+Terminal=false
+Type=Application
+Categories=Network;GTK;GNOME;Application;Utility;

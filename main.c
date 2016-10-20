@@ -2,7 +2,8 @@
 #include <libappindicator/app-indicator.h>
 
 const gchar *version = "0.0";
-const gchar *authors[] = { "Chunyang Xu <chunyang@xuchunyang.me>" };
+const gchar *authors[] = {"Chunyang Xu <chunyang@xuchunyang.me>",
+                          NULL};
 
 void
 on_about (GtkMenuItem *menu_item, gpointer user_data)

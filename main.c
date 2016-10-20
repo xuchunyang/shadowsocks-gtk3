@@ -1,42 +1,32 @@
 #include <gtk/gtk.h>
 #include <libappindicator/app-indicator.h>
 
-#define VERSION "0.0"
+const gchar *version = "0.0";
+const gchar *authors[] = { "Chunyang Xu <chunyang@xuchunyang.me>" };
 
 void
 on_about (GtkMenuItem *menu_item, gpointer user_data)
 {
-  /* This helps prevent multiple instances */
-  if (!gtk_grab_get_current ())
-    {
-      const gchar *authors[] = {"Chunyang Xu <chunyang@xuchunyang.me>",
-                                NULL};
-      gtk_show_about_dialog (NULL,
-                             "program-name", "shadowsocks gtk+",
-                             "comments", "A simple tray program to control shadowsocks.",
-                             "authors", authors,
-                             "website", "https://github.com/xuchunyang/shadowsocks-gtk3",
-                             "website-label", "Project Homepage",
-                             "version", VERSION,
-                             "license-type", GTK_LICENSE_GPL_3_0,
-                             NULL);
-
-    }
-  else
-    {
-      /* A window is already open, so we present it to the user */
-      GtkWidget *toplevel = gtk_widget_get_toplevel (gtk_grab_get_current ());
-      gtk_window_present (GTK_WINDOW (toplevel));
-    }
+  gtk_show_about_dialog (GTK_WINDOW (user_data),
+                         "program-name", "shadowsocks gtk+",
+                         "comments", "A simple tray program to control shadowsocks.",
+                         "authors", authors,
+                         "website", "https://github.com/xuchunyang/shadowsocks-gtk3",
+                         "website-label", "Project Homepage",
+                         "version", version,
+                         "license-type", GTK_LICENSE_GPL_3_0,
+                         NULL);
 }
 
 void
 activate (GtkApplication *app, gpointer data)
 {
+  GtkWidget *window;
   AppIndicator *indicator;
   GtkWidget *indicator_menu;
   GtkWidget *menu_item;
 
+  window = gtk_application_window_new (app);
   indicator_menu = gtk_menu_new ();
 
   /* Auto Proxy Mode */
@@ -45,9 +35,12 @@ activate (GtkApplication *app, gpointer data)
   /* Global Mode */
   menu_item = gtk_check_menu_item_new_with_label ("Global Mode");
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), menu_item);
+  /* Separator */
+  menu_item = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), menu_item);
   /* About */
   menu_item = gtk_menu_item_new_with_mnemonic ("About");
-  g_signal_connect (menu_item, "activate", G_CALLBACK (on_about), NULL);
+  g_signal_connect (menu_item, "activate", G_CALLBACK (on_about), window);
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), menu_item);
   /* Quit */
   menu_item = gtk_menu_item_new_with_mnemonic ("Quit");

@@ -17,7 +17,7 @@
 #include <gtk/gtk.h>
 #include <libappindicator/app-indicator.h>
 
-const gchar *version = "0.1";
+const gchar *version = "0.1.0";
 const gchar *authors[] = {"Chunyang Xu <chunyang@xuchunyang.me>",
                           NULL};
 
@@ -25,13 +25,14 @@ void
 on_about (GtkMenuItem *menu_item, gpointer user_data)
 {
   gtk_show_about_dialog (GTK_WINDOW (user_data),
-                         "program-name", "shadowsocks gtk+",
+                         "program-name", "shadowsocks gtk3",
                          "comments", "A simple tray program to control shadowsocks.",
                          "authors", authors,
                          "website", "https://github.com/xuchunyang/shadowsocks-gtk3",
-                         "website-label", "Project Homepage",
+                         "website-label", "github.com/xuchunyang/shadowsocks-gtk3",
                          "version", version,
                          "license-type", GTK_LICENSE_GPL_3_0,
+                         "logo-icon-name", "shadowsocks-gtk3",
                          NULL);
 }
 
@@ -114,8 +115,8 @@ activate (GtkApplication *app, gpointer data)
   g_clear_object (&setting);
   g_free (mode);
 
-  /* None Proxy Mode */
-  item = gtk_radio_menu_item_new_with_label (group, "None Proxy");
+  /* No Proxy Mode */
+  item = gtk_radio_menu_item_new_with_label (group, "No Proxy");
   group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (item));
   if (none_proxy)
     gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), TRUE);

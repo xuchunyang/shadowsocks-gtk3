@@ -1,5 +1,7 @@
 一只用来控制 shadowsocks 的托盘小程序。
 
+![shadowsocks-gtk3-v0.1.0](http://i.imgur.com/upLEMzi.png)
+
 ## 依赖
 
 库依赖：
@@ -18,7 +20,15 @@
 
 ## 使用
 
-TODO
+启动 `sslocal`，比如用
+
+    sslocal  -c /etc/shadowsocks.json -d start --pid-file /tmp/shadowsocks.pid --log-file /tmp/shadowsocks.log
+
+使用系统设置配置代理，比如在 Ubuntu 下
+
+    System Settings -> Network -> Network proxy
+
+使用 shadowsocks-gtk3 切换代理。
 
 ## 卸载
 

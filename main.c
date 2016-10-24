@@ -1,4 +1,4 @@
-/* Copyright (C) 2016 by Chunyang Xu <chunyang@xuchunyang.me>
+/* Copyright (C) 2016 by Chunyang Xu <mail@xuchunyang.me>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #include <libappindicator/app-indicator.h>
 
 const gchar *version = "0.1.0";
-const gchar *authors[] = {"Chunyang Xu <chunyang@xuchunyang.me>",
+const gchar *authors[] = {"Chunyang Xu <mail@xuchunyang.me>",
                           NULL};
 
 void

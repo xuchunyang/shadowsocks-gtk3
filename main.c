@@ -17,6 +17,9 @@
 #include <gtk/gtk.h>
 #include <libappindicator/app-indicator.h>
 
+#define run_sslocal_command \
+  "sslocal -c /etc/shadowsocks.json -d start --pid-file /tmp/shadowsocks.pid --log-file /tmp/shadowsocks.log"
+
 const gchar *version = "0.1.0";
 const gchar *authors[] = {"Chunyang Xu <mail@xuchunyang.me>",
                           NULL};
@@ -84,6 +87,85 @@ on_global_proxy (GtkMenuItem *item, gpointer data)
     }
 }
 
+gboolean
+command_is_successed (const gchar *command)
+{
+  gint exit_status;
+  if (g_spawn_command_line_sync (command, NULL, NULL, &exit_status, NULL) &&
+      exit_status == 0)
+    return TRUE;
+  else
+    return FALSE;
+}
+
+gboolean
+sslocal_is_running ()
+{
+  command_is_successed ("pgrep sslocal");
+}
+
+void
+on_sslocal_status (GtkMenuItem *item, gpointer data)
+{
+  GtkWidget *dialog;
+  dialog = gtk_message_dialog_new (GTK_WINDOW (data),
+                                   GTK_DIALOG_DESTROY_WITH_PARENT,
+                                   GTK_MESSAGE_INFO,
+                                   GTK_BUTTONS_OK,
+                                   "sslocal is%s running",
+                                   sslocal_is_running () ? "" : " not");
+  gtk_dialog_run (GTK_DIALOG (dialog));
+  gtk_widget_destroy (dialog);
+}
+
+void
+on_kill_sslocal (GtkMenuItem *item, gpointer data)
+{
+  GtkWidget *dialog;
+  gchar *msg;
+
+  if (sslocal_is_running ())
+    msg = command_is_successed ("pkill sslocal") ?
+      g_strdup ("sslocal killed") :
+      g_strdup ("Error! sslocal is not killed");
+  else
+    msg = g_strdup ("Can't kill. sslocal is not running at all");
+
+  dialog = gtk_message_dialog_new (GTK_WINDOW (data),
+                                   GTK_DIALOG_DESTROY_WITH_PARENT,
+                                   GTK_MESSAGE_INFO,
+                                   GTK_BUTTONS_OK,
+                                   "%s",
+                                   msg);
+  gtk_dialog_run (GTK_DIALOG (dialog));
+  g_free (msg);
+  gtk_widget_destroy (dialog);
+}
+
+void
+on_run_sslocal (GtkMenuItem *item, gpointer data)
+{
+  GtkWidget *dialog;
+  gchar *msg;
+
+  if (sslocal_is_running ())
+    msg = g_strdup ("sslocal is alreay running");
+  else
+    msg = command_is_successed (run_sslocal_command) ?
+      g_strdup ("Running sslocal") :
+      g_strdup ("Error! Running sslocal failed");
+
+  dialog = gtk_message_dialog_new (GTK_WINDOW (data),
+                                   GTK_DIALOG_DESTROY_WITH_PARENT,
+                                   GTK_MESSAGE_INFO,
+                                   GTK_BUTTONS_OK,
+                                   "%s",
+                                   msg);
+  gtk_dialog_run (GTK_DIALOG (dialog));
+  g_free (msg);
+  gtk_widget_destroy (dialog);
+}
+
 void
 activate (GtkApplication *app, gpointer data)
 {
@@ -135,6 +217,21 @@ activate (GtkApplication *app, gpointer data)
   if (global_proxy)
     gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), TRUE);
   g_signal_connect (item, "toggled", G_CALLBACK (on_global_proxy), NULL);
+  gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
+  /* Separator */
+  item = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
+  /* sslocal status */
+  item = gtk_menu_item_new_with_label ("sslocal status");
+  g_signal_connect (item, "activate", G_CALLBACK (on_sslocal_status), window);
+  gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
+  /* run sslocal */
+  item = gtk_menu_item_new_with_label ("Run sslocal");
+  g_signal_connect (item, "activate", G_CALLBACK (on_run_sslocal), window);
+  gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
+  /* kill sslocal */
+  item = gtk_menu_item_new_with_label ("Kill sslocal");
+  g_signal_connect (item, "activate", G_CALLBACK (on_kill_sslocal), window);
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
   /* Separator */
   item = gtk_separator_menu_item_new ();

@@ -180,8 +180,16 @@ on_run_sslocal (GtkMenuItem *item, gpointer data)
 }
 
 void
+run_sslocal_at_startup ()
+{
+  sslocal_is_running () || g_spawn_command_line_async (run_sslocal_command, NULL);
+}
+
+void
 activate (GtkApplication *app, gpointer data)
 {
+  run_sslocal_at_startup ();
+
   GtkWidget *window;
   AppIndicator *indicator;
   GtkWidget *indicator_menu;

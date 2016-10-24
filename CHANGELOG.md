@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Run/kill/show sslocal process.
+- Run sslocal at startup.
 
 ## [0.1.0] - 2016-10-21
 ### Added

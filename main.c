@@ -147,13 +147,26 @@ on_run_sslocal (GtkMenuItem *item, gpointer data)
 {
   GtkWidget *dialog;
   gchar *msg;
+  gint exit_status;
+  gchar *output;
+  gchar *outputerr;
+  GError *error = NULL;
 
   if (sslocal_is_running ())
     msg = g_strdup ("sslocal is alreay running");
   else
-    msg = command_is_successed (run_sslocal_command) ?
-      g_strdup ("Running sslocal") :
-      g_strdup ("Error! Running sslocal failed");
+    {
+      if (g_spawn_command_line_sync (run_sslocal_command,
+                                     &output,
+                                     &outputerr,
+                                     &exit_status,
+                                     &error) &&
+          exit_status == 0)
+        msg = g_strdup_printf ("Success! Running sslocal.\n%s\n%s", output, outputerr);
+      else
+        msg = g_strdup_printf ("Error! Running sslocal failed.\n%s",
+                               error ? g_strdup (error->message) : "");
+    }
 
   dialog = gtk_message_dialog_new (GTK_WINDOW (data),
                                    GTK_DIALOG_DESTROY_WITH_PARENT,

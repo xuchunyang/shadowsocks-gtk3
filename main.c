@@ -112,8 +112,10 @@ on_sslocal_status (GtkMenuItem *item, gpointer data)
                                    GTK_DIALOG_DESTROY_WITH_PARENT,
                                    GTK_MESSAGE_INFO,
                                    GTK_BUTTONS_OK,
-                                   "sslocal is%s running",
-                                   sslocal_is_running () ? "" : " not");
+                                   "%s",
+                                   sslocal_is_running () ?
+                                   "Yes, sslocal is running!" :
+                                   "No, sslocal is not running!");
   gtk_dialog_run (GTK_DIALOG (dialog));
   gtk_widget_destroy (dialog);
 }
@@ -243,15 +245,15 @@ activate (GtkApplication *app, gpointer data)
   item = gtk_separator_menu_item_new ();
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
   /* sslocal status */
-  item = gtk_menu_item_new_with_label ("sslocal status");
+  item = gtk_menu_item_new_with_label ("Is sslocal running?");
   g_signal_connect (item, "activate", G_CALLBACK (on_sslocal_status), window);
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
   /* run sslocal */
-  item = gtk_menu_item_new_with_label ("Run sslocal");
+  item = gtk_menu_item_new_with_label ("Run sslocal...");
   g_signal_connect (item, "activate", G_CALLBACK (on_run_sslocal), window);
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
   /* kill sslocal */
-  item = gtk_menu_item_new_with_label ("Kill sslocal");
+  item = gtk_menu_item_new_with_label ("Kill sslocal...");
   g_signal_connect (item, "activate", G_CALLBACK (on_kill_sslocal), window);
   gtk_menu_shell_append (GTK_MENU_SHELL (indicator_menu), item);
   /* Separator */

@@ -20,7 +20,7 @@
 #define run_sslocal_command \
   "sslocal -c /etc/shadowsocks.json -d start --pid-file /tmp/shadowsocks.pid --log-file /tmp/shadowsocks.log"
 
-const gchar *version = "0.1.0";
+const gchar *version = "0.2.0";
 const gchar *authors[] = {"Chunyang Xu <mail@xuchunyang.me>",
                           NULL};
 

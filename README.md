@@ -1,6 +1,6 @@
 一只用来控制 shadowsocks 的托盘小程序。
 
-![shadowsocks-gtk3-v0.2.0](http://i.imgur.com/36t9zcc.png)
+![shadowsocks-gtk3-v0.2.0](http://i.imgur.com/eLOwwnE.png)
 ## 依赖
 
 库依赖：

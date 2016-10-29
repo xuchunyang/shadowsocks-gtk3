@@ -19,10 +19,6 @@
 
 ## 使用
 
-启动 `sslocal`，比如用
-
-    sslocal  -c /etc/shadowsocks.json -d start --pid-file /tmp/shadowsocks.pid --log-file /tmp/shadowsocks.log
-
 使用系统设置配置代理，比如在 Ubuntu 下
 
     System Settings -> Network -> Network proxy
